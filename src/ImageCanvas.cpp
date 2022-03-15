@@ -139,9 +139,14 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
         nvgTextAlign(ctx, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
         auto* glfwWindow = screen()->glfw_window();
-        bool shiftAndControlHeld =
+        const bool shiftAndControlHeld =
             (glfwGetKey(glfwWindow, GLFW_KEY_LEFT_SHIFT) || glfwGetKey(glfwWindow, GLFW_KEY_RIGHT_SHIFT)) &&
             (glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) || glfwGetKey(glfwWindow, GLFW_KEY_RIGHT_CONTROL));
+
+        const bool altAndOneHeld =
+            glfwGetKey(glfwWindow, GLFW_KEY_LEFT_ALT) && glfwGetKey(glfwWindow, GLFW_KEY_1);
+        const bool altAndTwoHeld =
+            glfwGetKey(glfwWindow, GLFW_KEY_LEFT_ALT) && glfwGetKey(glfwWindow, GLFW_KEY_2);
 
         Vector2i cur;
         vector<float> values;
@@ -164,6 +169,21 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
                         pos = Vector2f{
                             m_pos.x() + nano.x() + (i - 0.5f * (colors.size() - 1)) * fontSize * 0.88f,
                             (float)m_pos.y() + nano.y(),
+                        };
+                    } else if (altAndOneHeld) {
+                        str = tfm::format("%.4f", std::clamp(values[i], 0.f, 1.f) * 2.f - 1.f);
+            
+                        pos = Vector2f{
+                            (float)m_pos.x() + nano.x(),
+                            m_pos.y() + nano.y() + (i - 0.5f * (colors.size() - 1)) * fontSize,
+                        };
+                    } else if (altAndTwoHeld) {
+                        float tonemappedValue = Channel::tail(channels[i]) == "A" ? values[i] : toSRGB(values[i]);
+                        str = tfm::format("%.4f", tonemappedValue);
+
+                        pos = Vector2f{
+                            (float)m_pos.x() + nano.x(),
+                            m_pos.y() + nano.y() + (i - 0.5f * (colors.size() - 1)) * fontSize,
                         };
                     } else {
                         str = fmt::format("{:.4f}", values[i]);
