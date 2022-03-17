@@ -101,7 +101,8 @@ HelpWindow::HelpWindow(Widget* parent, bool supportsHdr, function<void()> closeC
     addRow(imageSelection, "Shift+Ctrl (hold)", "Display raw bytes on pixels when zoomed-in");
     addRow(imageSelection, ALT + "+1 (hold)", "Display values in vector space [-1,1] when zoomed-in");
     addRow(imageSelection, ALT + "+2 (hold)", "Display raw float values on pixels when zoomed-in");
-     
+    addRow(imageSelection, ALT + "+3 (hold)", "Display raw [0-255] values on pixels when zoomed-in");
+ 
     new Label{shortcuts, "Reference options", "sans-bold", 18};
     auto referenceSelection = new Widget{shortcuts};
     referenceSelection->set_layout(new BoxLayout{Orientation::Vertical, Alignment::Fill, 0, 0});

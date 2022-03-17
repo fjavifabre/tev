@@ -147,6 +147,8 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
             glfwGetKey(glfwWindow, GLFW_KEY_LEFT_ALT) && glfwGetKey(glfwWindow, GLFW_KEY_1);
         const bool altAndTwoHeld =
             glfwGetKey(glfwWindow, GLFW_KEY_LEFT_ALT) && glfwGetKey(glfwWindow, GLFW_KEY_2);
+        const bool altAndThreeHeld =
+            glfwGetKey(glfwWindow, GLFW_KEY_LEFT_ALT) && glfwGetKey(glfwWindow, GLFW_KEY_3);
 
         Vector2i cur;
         vector<float> values;
@@ -171,7 +173,7 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
                             (float)m_pos.y() + nano.y(),
                         };
                     } else if (altAndOneHeld) {
-                        str = tfm::format("%.4f", std::clamp(values[i], 0.f, 1.f) * 2.f - 1.f);
+                        str = tfm::format("{:.4f}", std::clamp(values[i], 0.f, 1.f) * 2.f - 1.f);
             
                         pos = Vector2f{
                             (float)m_pos.x() + nano.x(),
@@ -179,13 +181,21 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
                         };
                     } else if (altAndTwoHeld) {
                         float tonemappedValue = Channel::tail(channels[i]) == "A" ? values[i] : toSRGB(values[i]);
-                        str = tfm::format("%.4f", tonemappedValue);
+                        str = fmt::format("{:.4f}", tonemappedValue);
 
                         pos = Vector2f{
                             (float)m_pos.x() + nano.x(),
                             m_pos.y() + nano.y() + (i - 0.5f * (colors.size() - 1)) * fontSize,
                         };
-                    } else {
+                    } else if (altAndThreeHeld) {
+                        float tonemappedValue = Channel::tail(channels[i]) == "A" ? values[i] : toSRGB(values[i]);
+                        str = fmt::format("{:.0d}", static_cast<int>(std::min(tonemappedValue, 1.F) * 255.F));
+
+                        pos = Vector2f{
+                            (float)m_pos.x() + nano.x(),
+                            m_pos.y() + nano.y() + (i - 0.5f * (colors.size() - 1)) * fontSize,
+                        };
+                    }else {
                         str = fmt::format("{:.4f}", values[i]);
 
                         pos = Vector2f{
