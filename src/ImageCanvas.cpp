@@ -189,7 +189,7 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
                         };
                     } else if (altAndThreeHeld) {
                         float tonemappedValue = Channel::tail(channels[i]) == "A" ? values[i] : toSRGB(values[i]);
-                        str = fmt::format("{:.0d}", static_cast<int>(std::min(tonemappedValue, 1.F) * 255.F));
+                        str = fmt::format("{:.0d}", static_cast<int>(std::min(tonemappedValue, 1.F) * 255.F + .5F));
 
                         pos = Vector2f{
                             (float)m_pos.x() + nano.x(),
