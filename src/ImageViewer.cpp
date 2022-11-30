@@ -74,7 +74,22 @@ ImageViewer::ImageViewer(const shared_ptr<BackgroundImagesLoader>& imagesLoader,
             panel = new Widget{mSidebarLayout};
             panel->set_layout(new BoxLayout{Orientation::Vertical, Alignment::Fill, 5});
 
-            mExposureLabel = new Label{panel, "", "sans-bold", 15};
+            {
+                auto * panel2 = new Widget{panel};
+                panel2->set_layout(new GridLayout{Orientation::Horizontal, 2, Alignment::Fill, 5, 15});
+                // Exposure label and textbox
+                mExposureLabel = new Label{panel2, "", "sans-bold", 15};
+
+                mExposureBox = new FloatBox<float>{panel2, 0.F};
+                mExposureBox->set_editable(true);
+                mExposureBox->number_format("%2.2f");
+                mExposureBox->set_value_increment(0.01F);
+                //mExposureBox->set_alignment(TextBox::Alignment::Right);
+
+                mExposureBox->set_callback([this](float value) {
+                    setExposure(value);
+                });
+            }
 
             mExposureSlider = new Slider{panel};
             mExposureSlider->set_range({-5.0f, 5.0f});
@@ -1431,11 +1446,13 @@ void ImageViewer::selectReference(const shared_ptr<Image>& image) {
 }
 
 void ImageViewer::setExposure(float value) {
-    value = round(value, 1.0f);
+    value = round(value, 2.0f);
     mExposureSlider->set_value(value);
-    mExposureLabel->set_caption(fmt::format("Exposure: {:+.1f}", value));
+    mExposureLabel->set_caption(fmt::format("Exposure:"));
 
     mImageCanvas->setExposure(value);
+
+    mExposureBox->set_value(value);
 }
 
 void ImageViewer::setOffset(float value) {

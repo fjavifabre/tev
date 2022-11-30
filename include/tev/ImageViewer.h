@@ -197,6 +197,7 @@ private:
 
     nanogui::Label* mExposureLabel;
     nanogui::Slider* mExposureSlider;
+    nanogui::FloatBox<float>* mExposureBox;
 
     nanogui::Label* mOffsetLabel;
     nanogui::Slider* mOffsetSlider;

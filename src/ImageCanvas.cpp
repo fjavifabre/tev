@@ -173,7 +173,7 @@ void ImageCanvas::drawPixelValuesAsText(NVGcontext* ctx) {
                             (float)m_pos.y() + nano.y(),
                         };
                     } else if (altAndOneHeld) {
-                        str = tfm::format("{:.4f}", std::clamp(values[i], 0.f, 1.f) * 2.f - 1.f);
+                        str = tfm::format("{:.4f}", std::clamp(toSRGB(values[i]), 0.f, 1.f) * 2.f - 1.f);
             
                         pos = Vector2f{
                             (float)m_pos.x() + nano.x(),
